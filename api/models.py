@@ -22,7 +22,7 @@ class Company(Base):
         BAALBEK_HERMEL = 'BH', _('Baalbek-Hermel')
         UNKNOWN = 'UK', _('Unknown')
 
-    cr_id = models.IntegerField(unique=True)
+    cr_id = models.CharField(max_length=128, unique=True)
     source_url = models.CharField(max_length=255, unique=True)
     registration_number = models.IntegerField()
     name = models.CharField(max_length=255)
@@ -40,6 +40,12 @@ class Company(Base):
     capital = models.DecimalField(max_digits=15, decimal_places=2)
     title = models.CharField(max_length=128)
     description = models.TextField()
+    missing_personnel_data = models.BooleanField(default=False)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['name'], name="company_name_idx"),
+        ]
 
     def __str__(self):
         return self.name
@@ -48,6 +54,11 @@ class Company(Base):
 class Person(Base):
     name = models.CharField(max_length=255)
     nationality = models.CharField(max_length=128)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['name'], name="person_name_idx"),
+        ]
 
     def __str__(self):
         return self.name
@@ -62,3 +73,18 @@ class PersonCompany(Base):
     stock = models.IntegerField()
     quota = models.IntegerField()
     ratio = models.IntegerField()
+
+
+class ScrapeError(Base):
+    class ModelType(models.TextChoices):
+        COMPANY = 'CO', _('Company')
+        PERSON = 'PE', _('Person')
+        PERSON_COMPANY = 'PC', _('PersonCompany')
+        UNKNOWN = 'UK', _('Unknown')
+    cr_id = models.CharField(max_length=128, unique=True)
+    model_type = models.CharField(
+        max_length=2,
+        choices=ModelType.choices,
+        default=ModelType.UNKNOWN,
+    )
+    error_message = models.CharField(max_length=255)
