@@ -23,6 +23,7 @@ class Company(Base):
         UNKNOWN = 'UK', _('Unknown')
 
     cr_id = models.CharField(max_length=128, unique=True)
+    cr_sub_id = models.IntegerField()
     source_url = models.CharField(max_length=255, unique=True)
     registration_number = models.IntegerField()
     name = models.CharField(max_length=255)
@@ -33,12 +34,12 @@ class Company(Base):
         default=Governorate.UNKNOWN,
     )
     registration_date = models.DateTimeField()
-    record_type = models.CharField(max_length=128)
-    company_status = models.CharField(max_length=128)
-    company_duration = models.CharField(max_length=128)
-    legal_form = models.CharField(max_length=128)
+    record_type = models.CharField(max_length=255)
+    company_status = models.CharField(max_length=255)
+    company_duration = models.CharField(max_length=255)
+    legal_form = models.CharField(max_length=255)
     capital = models.DecimalField(max_digits=15, decimal_places=2)
-    title = models.CharField(max_length=128)
+    title = models.CharField(max_length=255)
     description = models.TextField()
     missing_personnel_data = models.BooleanField(default=False)
 
@@ -53,7 +54,13 @@ class Company(Base):
 
 class Person(Base):
     name = models.CharField(max_length=255)
+    company = models.ForeignKey(Company, related_name="company",
+                                on_delete=models.CASCADE)
     nationality = models.CharField(max_length=128)
+    relationship = models.CharField(max_length=128)
+    stock = models.IntegerField()
+    quota = models.IntegerField()
+    ratio = models.IntegerField()
 
     class Meta:
         indexes = [
@@ -64,22 +71,10 @@ class Person(Base):
         return self.name
 
 
-class PersonCompany(Base):
-    person = models.ForeignKey(Person, related_name="person",
-                               on_delete=models.CASCADE)
-    company = models.ForeignKey(Company, related_name="company",
-                                on_delete=models.CASCADE)
-    relationship = models.CharField(max_length=128)
-    stock = models.IntegerField()
-    quota = models.IntegerField()
-    ratio = models.IntegerField()
-
-
 class ScrapeError(Base):
     class ModelType(models.TextChoices):
         COMPANY = 'CO', _('Company')
         PERSON = 'PE', _('Person')
-        PERSON_COMPANY = 'PC', _('PersonCompany')
         UNKNOWN = 'UK', _('Unknown')
     cr_id = models.CharField(max_length=128, unique=True)
     model_type = models.CharField(
