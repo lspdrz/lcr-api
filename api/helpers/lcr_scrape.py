@@ -118,6 +118,19 @@ class LCRScrape:
             if name in person_dict.keys():
                 person = person_dict[name]
                 person.relationship = person.relationship + ' \\ ' + relationship
+                stock = self.__get_soup_value(
+                    'Relations_ListView_a_valLabel_' + str(index), 'int')
+                quota = self.__get_soup_value(
+                    'Relations_ListView_s_valLabel_' + str(index), 'int')
+                ratio = self.__get_soup_value(
+                    'Relations_ListView_r_valLabel_' + str(index), 'int')
+                if person.stock == 0:
+                    person.stock = stock
+                if person.quota == 0:
+                    person.quota = quota
+                if person.ratio == 0:
+                    person.ratio = ratio
+
             else:
                 person = Person(
                     name=name,
@@ -126,11 +139,11 @@ class LCRScrape:
                         'Relations_ListView_countryLabel_' + str(index)),
                     relationship=relationship,
                     stock=self.__get_soup_value(
-                        'Relations_ListView_a_valLabel_' + str(index)),
+                        'Relations_ListView_a_valLabel_' + str(index), 'int'),
                     quota=self.__get_soup_value(
-                        'Relations_ListView_s_valLabel_' + str(index)),
+                        'Relations_ListView_s_valLabel_' + str(index), 'int'),
                     ratio=self.__get_soup_value(
-                        'Relations_ListView_r_valLabel_' + str(index))
+                        'Relations_ListView_r_valLabel_' + str(index), 'int')
                 )
                 person_dict[name] = person
         self.personnel = person_dict.values()
@@ -144,5 +157,7 @@ class LCRScrape:
                 return str(contents[0])
             elif cast_type == 'decimal':
                 return Decimal(contents[0])
+            elif cast_type == 'int':
+                return int(contents[0])
         else:
             return ''
