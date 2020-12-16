@@ -11,16 +11,16 @@ class Base(models.Model):
 
 
 class Company(Base):
-    class Governorate(models.TextChoices):
-        BEIRUT = 'BE', _('Beirut')
-        MOUNT_LEBANON = 'ML', _('Mount Lebanon')
-        NORTH_LEBANON = 'NL', _('North Lebanon')
-        BEKAA = 'BA', _('Bekaa')
-        SOUTH_LEBANON = 'SL', _('South Lebanon')
-        NABATIEH = 'NA', _('Nabatieh')
-        AKKAR = 'AK', _('Akkar')
-        BAALBEK_HERMEL = 'BH', _('Baalbek-Hermel')
-        UNKNOWN = 'UK', _('Unknown')
+    class Governorate(models.IntegerChoices):
+        BEIRUT = 1
+        MOUNT_LEBANON = 2
+        NORTH_LEBANON = 3
+        BEKAA = 4
+        SOUTH_LEBANON = 5
+        NABATIEH = 6
+        # Akkar and Baalbek Hermel currently not included in Commercial Registry
+        # AKKAR = 7
+        # BAALBEK_HERMEL = 8
 
     cr_id = models.CharField(max_length=128, unique=True)
     cr_sub_id = models.IntegerField()
@@ -28,11 +28,7 @@ class Company(Base):
     registration_number = models.IntegerField()
     name = models.CharField(max_length=255)
     additional_name = models.CharField(max_length=255)
-    governorate = models.CharField(
-        max_length=2,
-        choices=Governorate.choices,
-        default=Governorate.UNKNOWN,
-    )
+    governorate = models.IntegerField(choices=Governorate.choices)
     registration_date = models.DateTimeField()
     record_type = models.CharField(max_length=255)
     company_status = models.CharField(max_length=255)
