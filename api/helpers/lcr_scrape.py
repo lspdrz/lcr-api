@@ -117,19 +117,7 @@ class LCRScrape:
                 'Relations_ListView_relLabel_' + str(index))
             if name in person_dict.keys():
                 person = person_dict[name]
-                person.relationship = person.relationship + ' \\ ' + relationship
-                stock = self.__get_soup_value(
-                    'Relations_ListView_a_valLabel_' + str(index), 'int')
-                quota = self.__get_soup_value(
-                    'Relations_ListView_s_valLabel_' + str(index), 'int')
-                ratio = self.__get_soup_value(
-                    'Relations_ListView_r_valLabel_' + str(index), 'int')
-                if person.stock == 0:
-                    person.stock = stock
-                if person.quota == 0:
-                    person.quota = quota
-                if person.ratio == 0:
-                    person.ratio = ratio
+                person = self.__update_person(person, relationship, index)
 
             else:
                 person = Person(
@@ -148,6 +136,21 @@ class LCRScrape:
                 person_dict[name] = person
         self.personnel = person_dict.values()
         Person.objects.bulk_create(self.personnel)
+
+    def __update_person(self, person, relationship, index):
+        person.relationship = person.relationship + ' \\ ' + relationship
+        stock = self.__get_soup_value(
+            'Relations_ListView_a_valLabel_' + str(index), 'int')
+        quota = self.__get_soup_value(
+            'Relations_ListView_s_valLabel_' + str(index), 'int')
+        ratio = self.__get_soup_value(
+            'Relations_ListView_r_valLabel_' + str(index), 'int')
+        if person.stock == 0:
+            person.stock = stock
+        if person.quota == 0:
+            person.quota = quota
+        if person.ratio == 0:
+            person.ratio = ratio
 
     def __get_soup_value(self, tag_id, cast_type='string'):
         """ Helper for soup element casting """
