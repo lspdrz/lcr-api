@@ -35,7 +35,7 @@ class LCRScrape:
                 model_type='UK',
                 error_message=str(e)
             )
-            person_scrape_error.save()
+            scrape_error.save()
             raise Exception("Failed to get soup from source url")
 
     def __get_company(self):
