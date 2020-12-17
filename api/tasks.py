@@ -13,23 +13,18 @@ import time
 
 @shared_task
 def scrape_lcr():
-    scrape_count = 0
     governorates = Company.Governorate
     for gov in governorates:
-        keep_scraping = 0
+        scrape_count = 0
+        keep_scraping = True
         cr_sub_id = get_initial_cr_sub_id(gov)
-        while(keep_scraping < 3):
+        while(keep_scraping):
             if scrape_count % constants.REQUEST_LIMIT == 0:
                 time.sleep(1)  # So we don't overload the Lebanon CR server
             cr_sub_id += 1
-            try:
-                run_scrape.delay(cr_sub_id, gov)
-            except Exception as e:
-                print("Scrape didn't work")
-                print(e)
-                pass
+            run_scrape.delay(cr_sub_id, gov)
             scrape_count += 1
-            keep_scraping += 1
+            keep_scraping = scrape_count < constants.GOVERNORATE_SCRAPE_LIMIT[gov]
 
 
 @shared_task

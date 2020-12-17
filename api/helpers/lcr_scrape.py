@@ -21,11 +21,11 @@ class LCRScrape:
         self.personnel = {}
 
     def extract_data(self):
-        self.get_soup()
-        self.get_company()
-        self.get_personnel()
+        self.__get_soup()
+        self.__get_company()
+        self.__get_personnel()
 
-    def get_soup(self):
+    def __get_soup(self):
         try:
             r = requests.get(self.source_url)
             self.soup = BeautifulSoup(r.content, 'html.parser')
@@ -38,9 +38,9 @@ class LCRScrape:
             person_scrape_error.save()
             raise Exception("Failed to get soup from source url")
 
-    def get_company(self):
+    def __get_company(self):
         try:
-            self.scrape_company()
+            self.__scrape_company()
         except Exception as e:
             company_scrape_error = ScrapeError(
                 cr_id=self.cr_id,
@@ -50,11 +50,11 @@ class LCRScrape:
             company_scrape_error.save()
             raise Exception("Failed to scrape company")
 
-    def get_personnel(self):
+    def __get_personnel(self):
         if self.company.missing_personnel_data:
             return False
         try:
-            self.scrape_personnel()
+            self.__scrape_personnel()
         except Exception as e:
             personnel_scrape_error = ScrapeError(
                 cr_id=self.cr_id,
@@ -64,7 +64,7 @@ class LCRScrape:
             personnel_scrape_error.save()
             raise Exception("Failed to scrape personnel table")
 
-    def scrape_company(self):
+    def __scrape_company(self):
         """
         Scrapes company data from html elements
         Creates a Company object and saves to database
@@ -96,7 +96,7 @@ class LCRScrape:
         )
         self.company.save()
 
-    def scrape_personnel(self):
+    def __scrape_personnel(self):
         """
         Loops through personnel table on company website
             - Scrapes person data from html elements
