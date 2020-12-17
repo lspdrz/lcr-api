@@ -17,7 +17,7 @@ In other words, these were about the highest ids I could find on the LCR website
 government, and I assume that there aren't more ids higher than them as of 17-12-2020
 """
 GOVERNORATE_SCRAPE_LIMIT = {
-    1: 129810,
+    1: 117000,
     2: 127660,
     3: 50000,
     4: 24100,
