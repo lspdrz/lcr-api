@@ -1,0 +1,1 @@
+web: gunicorn lcr_api.wsgi --log-file -
