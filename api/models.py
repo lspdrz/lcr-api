@@ -78,4 +78,4 @@ class ScrapeError(Base):
         choices=ModelType.choices,
         default=ModelType.UNKNOWN,
     )
-    error_message = models.CharField(max_length=255)
+    error_message = models.TextField()
