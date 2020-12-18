@@ -21,12 +21,12 @@ def scrape_lcr():
         while(keep_scraping):
             if scrape_count % constants.REQUEST_LIMIT == 0:
                 time.sleep(1)  # So we don't overload the Lebanon CR server
-            if scrape_count % 500 == 0:
-                # Attempt to not overload our free Heroku redis server
-                time.sleep(60)
             cr_sub_id += 1
             run_scrape.delay(cr_sub_id, gov)
             scrape_count += 1
+            if scrape_count % 500 == 0:
+                # Attempt to not overload our free Heroku redis server
+                time.sleep(60)
             keep_scraping = scrape_count < constants.GOVERNORATE_SCRAPE_LIMIT[gov]
 
 

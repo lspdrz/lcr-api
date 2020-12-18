@@ -1,3 +1,4 @@
+from django.conf import settings
 """
 Request Limit for Scraping, pauses for one second
 every time limit is reached
@@ -17,10 +18,10 @@ In other words, these were about the highest ids I could find on the LCR website
 government, and I assume that there aren't more ids higher than them as of 17-12-2020
 """
 GOVERNORATE_SCRAPE_LIMIT = {
-    1: 117000,
-    2: 127660,
-    3: 50000,
-    4: 24100,
-    5: 24560,
-    6: 10000,
+    1: int(settings.BEIRUT_SCRAPE_LIMIT),
+    2: int(settings.MOUNT_LEBANON_SCRAPE_LIMIT),
+    3: int(settings.NORTH_LEBANON_SCRAPE_LIMIT),
+    4: int(settings.BEKAA_SCRAPE_LIMIT),
+    5: int(settings.SOUTH_LEBANON_SCRAPE_LIMIT),
+    6: int(settings.NABATIEH_SCRAPE_LIMIT),
 }
