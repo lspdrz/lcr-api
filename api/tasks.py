@@ -14,7 +14,7 @@ import time
 @shared_task
 def scrape_lcr():
     governorates = Company.Governorate
-    for gov in governorates:
+    for gov in governorates[1:]:
         scrape_count = 0
         keep_scraping = True
         cr_sub_id = get_initial_cr_sub_id(gov)
