@@ -15,7 +15,7 @@ import time
 def scrape_lcr():
     governorates = Company.Governorate
     for gov in governorates:
-        if gov == governorates.BEIRUT:
+        if gov == governorates.BEIRUT or gov == governorates.MOUNT_LEBANON:
             continue
         scrape_count = 0
         keep_scraping = True
